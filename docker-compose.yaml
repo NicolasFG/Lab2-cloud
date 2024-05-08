@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  boston-db:
+    image: postgres:latest
+    container_name: boston-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=BOSTON
+    volumes:
+      - boston-data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: boston-app
+    ports:
+      - "8080:8000"
+    environment:
+      - DB_HOST=boston-db
+    depends_on:
+      - boston-db
+
+volumes:
+  boston-data:
